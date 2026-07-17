@@ -6,23 +6,23 @@ export function HeroSection() {
         <main className="relative flex min-h-screen flex-1 flex-col items-center justify-center overflow-hidden px-4 py-24">
             {/* Bakgrundsbild — ligger i public/Bakgrund_test.jpg */}
             <Image
-                src="/Bakgrund_test.jpg"
+                src="/temp-bakgrund.png"
                 alt=""
                 fill
                 priority
                 className="object-cover"
             />
             {/* Mörk overlay så texten syns oavsett bild */}
-            <div className="absolute inset-0 bg-neutral-950/70" />
+            <div className="absolute inset-0 bg-neutral-950/50" />
 
             {/* Innehåll, måste ligga ovanpå bilden */}
             <div className="relative z-10 mx-auto flex max-w-2xl flex-col items-center gap-8 text-center">
                 <div className="space-y-3">
                     <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">
-                        KrökenKrew
+                        Torsdagskröken
                     </h1>
-                    <p className="max-w-md text-neutral-300">
-                        Välkommen till Torsdagskröken!
+                    <p className="font-heading max-w-md text-neutral-300">
+                        En liten öl är man väl värd?
                     </p>
                 </div>
 

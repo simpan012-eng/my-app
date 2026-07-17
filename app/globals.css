@@ -66,3 +66,6 @@
     @apply bg-background text-foreground;
   }
 }
+.font-heading {
+  font-family: var(--font-heading), sans-serif;
+}

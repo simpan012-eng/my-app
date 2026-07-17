@@ -19,7 +19,7 @@ export default async function Navbar() {
   }
 
   return (
-    <nav className="fixed top-0 z-50 flex w-full items-center justify-between border-b border-white/10 bg-black/10 px-6 py-4 text-neutral-300 backdrop-blur-lg">
+    <nav className="fixed top-0 z-50 flex w-full items-center justify-between border-b border-white/10 bg-black/10 px-6 py-4 text-neutral-100 backdrop-blur-lg">
       <div className="flex gap-6">
         <Link href="/">Start</Link>
         <Link href="/krokenkrew">KrökenKrew</Link>

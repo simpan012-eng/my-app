@@ -3,18 +3,17 @@ type Member = {
   imageSrc?: string; // lämna tom för platshållare med initialer
 };
 
-// TODO: byt ut mot era 10 riktiga medlemmar + riktiga bilder i /public
 const members: Member[] = [
-  { name: "Medlem 1" },
-  { name: "Medlem 2" },
-  { name: "Medlem 3" },
-  { name: "Medlem 4" },
-  { name: "Medlem 5" },
-  { name: "Medlem 6" },
-  { name: "Medlem 7" },
-  { name: "Medlem 8" },
-  { name: "Medlem 9" },
-  { name: "Medlem 10" },
+  { name: "The Hamburgler", imageSrc: "/KrökenKrew-Aktiva/Hemlös.png" },
+  { name: "Emil Borg" },
+  { name: "Olle Morberg" },
+  { name: "Wilma Hansen" },
+  { name: "Olivia Thellander" },
+  { name: "Martin Ångström" },
+  { name: "Leon Van Der Stelt" },
+  { name: "Tiana Salmon" },
+  { name: "Julia Nilson" },
+  { name: "Joakim Centervall" },
 ];
 
 function initials(name: string) {
@@ -36,10 +35,7 @@ export default function Page() {
 
         <div className="grid grid-cols-2 gap-x-8 gap-y-10">
           {members.map((member) => (
-            <div
-              key={member.name}
-              className="flex flex-col items-center gap-3"
-            >
+            <div key={member.name} className="flex flex-col items-center gap-3">
               {member.imageSrc ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
@@ -61,12 +57,18 @@ export default function Page() {
       </div>
 
       <div className="max-w-xl space-y-4">
-        <h2 className="text-2xl font-bold text-neutral-100">Vilka vi är</h2>
+        <h2 className="text-2xl font-bold text-neutral-100">Vilka är vi?</h2>
         {/* TODO: ersätt med er riktiga beskrivning */}
         <p className="text-neutral-400">
-          KrökenKrew är en grupp vänner som samlas varje torsdag för
-          Torsdagskröken. Här kan ni beskriva vilka ni är, vad ni gör, och
-          vad KrökenKrew står för.
+          KrökenKrew är en studentförening som arrangerar Torsdagskröken på
+          Kårhuset Kårallen varje Torsdag! Vi är en ideell förening som drivs av
+          studenter för studenter, och vi strävar efter att skapa trevlig pubar
+          som ger lite extra glädje till vardagen. Vårt mål är att främja
+          gemenskap och social interaktion bland studenter genom att ta en
+          riktigt najs öl.
+          <br />
+          <br />
+          För en liten öl är man väl värd?
         </p>
       </div>
     </main>
