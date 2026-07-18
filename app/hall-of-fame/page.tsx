@@ -6,7 +6,7 @@ import HallOfFameGrid from "./hall-of-fame-grid";
 const entries = [    
   {
     id: "1",
-    imageSrc: "/KrökenKrew-HOF/2526.jpg",
+    imageSrc: "/KrökenKrew-HOF/2526.JPG",
     caption: "KrökenKrew 25/26",
     verksamhetsberattelse: "Sista året med helige Gränges på Kårallen. Under vintern 2025 skedde det otänktbara, Gränges slutades servera på Kårallen. Ekonomiska problem hos Kårservice fick dem att byta till ett billigare alternativ, Åbro. Alla som är glutenintoleranta sjunger dock av glädje då nya ölen, Arton56, är glutenfri.\n\nBjörn den trubbige (Eventansvarig på Kårservice) gjorde sin debut och öppnade upp DC, och som konsekvens oss DAs. Ökade priser, kastade DC under bussen och egna privata möten med festerier för att nämna några. Festivalla & UK flyttade till Stångåfältet pågrund av ökade priser på Kårallen. \n\nVi blev äntligen av med Eurest från matsalen och matsalen är nu vår! Det betyder att luftbytet kanske får en helt ny meta. Framtida häng för DAs kan också bli riktigt jälva mäktiga, tagga luftbytet. \n\nÅret var generellt riktigt lent, med bra människor och maxade efterhäng hos Farmor.",
     stats: [
