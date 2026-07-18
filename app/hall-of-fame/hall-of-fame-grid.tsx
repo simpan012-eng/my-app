@@ -1,6 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
+import { uploadHallOfFameImage, deleteHallOfFameImage } from "./actions";
+import { MAX_IMAGES_PER_ENTRY } from "./constants";
+
+type HallOfFameImage = {
+  id: string;
+  url: string;
+  createdBy: string | null;
+};
 
 type Entry = {
   id: string;
@@ -11,7 +20,7 @@ type Entry = {
     label: string;
     value: string;
   }[];
-  images: string[]; // extra bilder till "Bilder"-fliken
+  images: HallOfFameImage[]; // extra bilder till "Bilder"-fliken
 };
 
 const TABS = [
@@ -25,19 +34,89 @@ type TabKey = (typeof TABS)[number]["key"];
 export default function HallOfFameGrid({
   entries,
   isLoggedIn,
+  currentUserId,
+  isAdmin,
 }: {
   entries: Entry[];
   isLoggedIn: boolean;
+  currentUserId: string | null;
+  isAdmin: boolean;
 }) {
   const [activeEntry, setActiveEntry] = useState<Entry | null>(null);
   const [activeTab, setActiveTab] = useState<TabKey>("verksamhetsberattelse");
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const [isUploading, startUploadTransition] = useTransition();
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [isDeleting, startDeleteTransition] = useTransition();
+  const router = useRouter();
+
+  // Håll activeEntry uppdaterad när entries hämtas om (t.ex. efter en uppladdning)
+  useEffect(() => {
+    if (activeEntry) {
+      const updated = entries.find((e) => e.id === activeEntry.id);
+      if (updated) setActiveEntry(updated);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [entries]);
 
   const openEntry = (entry: Entry) => {
     setActiveEntry(entry);
     setActiveTab("verksamhetsberattelse");
+    setUploadError(null);
   };
 
   const closeEntry = () => setActiveEntry(null);
+
+  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB, samma gräns som i actions.ts
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !activeEntry) return;
+
+    setUploadError(null);
+
+    if (file.size > MAX_FILE_SIZE) {
+      setUploadError("Bilden är för stor (max 5 MB). Välj en mindre bild.");
+      e.target.value = "";
+      return;
+    }
+
+    if (activeEntry.images.length >= MAX_IMAGES_PER_ENTRY) {
+      setUploadError(
+        `Max ${MAX_IMAGES_PER_ENTRY} bilder är uppnått för den här årgången.`
+      );
+      e.target.value = "";
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("entryId", activeEntry.id);
+
+    startUploadTransition(async () => {
+      const result = await uploadHallOfFameImage(formData);
+      if (result?.error) {
+        setUploadError(result.error);
+      } else {
+        router.refresh();
+      }
+      e.target.value = "";
+    });
+  };
+
+  const handleDelete = (imageId: string) => {
+    setUploadError(null);
+    setDeletingId(imageId);
+    startDeleteTransition(async () => {
+      const result = await deleteHallOfFameImage(imageId);
+      if (result?.error) {
+        setUploadError(result.error);
+      } else {
+        router.refresh();
+      }
+      setDeletingId(null);
+    });
+  };
 
   return (
     <>
@@ -132,21 +211,65 @@ export default function HallOfFameGrid({
               )}
 
               {activeTab === "bilder" && (
-                <div className="grid grid-cols-2 gap-3">
-                  {activeEntry.images.length > 0 ? (
-                    activeEntry.images.map((src, i) => (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        key={i}
-                        src={src}
-                        alt=""
-                        className="aspect-square w-full rounded-lg object-cover"
-                      />
-                    ))
-                  ) : (
-                    <p className="text-sm text-neutral-500">
-                      Inga bilder ännu.
-                    </p>
+                <div>
+                  <div className="grid grid-cols-2 gap-3">
+                    {activeEntry.images.length > 0 ? (
+                      activeEntry.images.map((img) => {
+                        const canDelete =
+                          isAdmin || img.createdBy === currentUserId;
+                        return (
+                          <div key={img.id} className="relative">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              src={img.url}
+                              alt=""
+                              className="aspect-square w-full rounded-lg object-cover"
+                            />
+                            {canDelete && (
+                              <button
+                                onClick={() => handleDelete(img.id)}
+                                disabled={deletingId === img.id}
+                                aria-label="Radera bild"
+                                className="absolute right-1 top-1 rounded-md bg-black/70 px-2 py-1 text-xs text-white backdrop-blur transition-colors hover:bg-red-600 disabled:opacity-50"
+                              >
+                                {deletingId === img.id ? "..." : "✕"}
+                              </button>
+                            )}
+                          </div>
+                        );
+                      })
+                    ) : (
+                      <p className="col-span-2 text-sm text-neutral-500">
+                        Inga bilder ännu.
+                      </p>
+                    )}
+                  </div>
+
+                  {isLoggedIn && (
+                    <div className="mt-4">
+                      <p className="mb-2 text-xs text-neutral-500">
+                        {activeEntry.images.length}/{MAX_IMAGES_PER_ENTRY} bilder
+                      </p>
+                      {activeEntry.images.length < MAX_IMAGES_PER_ENTRY ? (
+                        <label className="inline-block cursor-pointer rounded-lg border border-dashed border-neutral-700 px-4 py-2 text-sm text-neutral-400 transition-colors hover:border-neutral-500 hover:text-white">
+                          {isUploading ? "Laddar upp..." : "+ Ladda upp bild"}
+                          <input
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={handleFileChange}
+                            disabled={isUploading}
+                          />
+                        </label>
+                      ) : (
+                        <p className="text-sm text-neutral-500">
+                          Max antal bilder uppnått för den här årgången.
+                        </p>
+                      )}
+                      {uploadError && (
+                        <p className="mt-2 text-sm text-red-400">{uploadError}</p>
+                      )}
+                    </div>
                   )}
                 </div>
               )}

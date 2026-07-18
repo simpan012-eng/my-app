@@ -7,7 +7,7 @@ export default function Page() {
       <p className="max-w-md text-neutral-400">
         Har du frågor eller vill hålla en samarbetspub med oss?
         <br />
-        Hör av dig till oss!
+        Kontakta oss på någon av våra kanaler!
       </p>
 
       {/* TODO: fyll i era riktiga kontaktuppgifter */}

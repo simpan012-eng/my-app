@@ -130,13 +130,47 @@ async function HallOfFameContent() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  return <HallOfFameGrid entries={entries} isLoggedIn={!!user} />;
+  let isAdmin = false;
+  if (user) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("is_admin")
+      .eq("id", user.id)
+      .single();
+    isAdmin = profile?.is_admin ?? false;
+  }
+
+  const { data: images } = await supabase
+    .from("hall_of_fame_images")
+    .select("id, entry_id, image_url, created_by")
+    .order("created_at", { ascending: false });
+
+  const entriesWithImages = entries.map((entry) => ({
+    ...entry,
+    images:
+      images
+        ?.filter((img) => img.entry_id === entry.id)
+        .map((img) => ({
+          id: img.id,
+          url: img.image_url,
+          createdBy: img.created_by as string | null,
+        })) ?? [],
+  }));
+
+  return (
+    <HallOfFameGrid
+      entries={entriesWithImages}
+      isLoggedIn={!!user}
+      currentUserId={user?.id ?? null}
+      isAdmin={isAdmin}
+    />
+  );
 }
 
 export default function Page() {
   return (
     <main className="flex-1 flex flex-col items-center gap-12 px-4 py-20 text-center">
-      <h1 className="font-heading tracking-wide text-4xl text-neutral-100">Hall of Fame</h1>
+      <h1 className="text-4xl font-bold text-neutral-100">Hall of Fame</h1>
       <Suspense
         fallback={
           <div className="grid w-full max-w-4xl grid-cols-2 gap-6 sm:grid-cols-3">
