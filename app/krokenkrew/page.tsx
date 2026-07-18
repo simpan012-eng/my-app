@@ -4,7 +4,7 @@ type Member = {
 };
 
 const members: Member[] = [
-  { name: "The Hamburgler", imageSrc: "IMG_4515.jpeg" },
+  { name: "The Hamburgler", imageSrc: "/KrökenKrew-Aktiva/Melker.jpg" },
   { name: "Emil Borg" },
   { name: "Olle Morberg" },
   { name: "Wilma Hansen" },
