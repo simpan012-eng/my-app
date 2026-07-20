@@ -8,9 +8,9 @@ import { LogoutButton } from "./logout-button";
 const links = [
   { name: "Start", href: "/" },
   { name: "KrökenKrew", href: "/krokenkrew" },
-  { name: "Contact", href: "/contact" },
+  { name: "Kontakt", href: "/kontakt" },
   { name: "Hall of Fame", href: "/hall-of-fame" },
-  { name: "Schedule", href: "/schedule" },
+  { name: "Kalender", href: "/kalender" },
 ];
 
 export function NavbarClient({
