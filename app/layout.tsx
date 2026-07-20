@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist } from "next/font/google";
+import { Geist, Bebas_Neue } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import Navbar from "@/components/navbar";
 import { Suspense } from "react";
@@ -21,6 +21,13 @@ const geistSans = Geist({
   subsets: ["latin"],
 });
 
+const bebasNeue = Bebas_Neue({
+  variable: "--font-heading",
+  weight: "400", // Bebas Neue finns bara i denna vikt
+  display: "swap",
+  subsets: ["latin"],
+});
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -28,11 +35,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.className} antialiased`}>
+      <body className={`${geistSans.className} ${bebasNeue.variable} antialiased`}>
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
-          enableSystem
+          defaultTheme="dark"
+          forcedTheme="dark"
           disableTransitionOnChange
         >
           <Suspense fallback={<div className="fixed top-0 z-50 h-[64px] w-full bg-gray-900" />}>

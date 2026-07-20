@@ -131,10 +131,10 @@ export default function HallOfFameGrid({
               <img
                 src={entry.imageSrc}
                 alt={entry.caption}
-                className="aspect-square w-full object-cover"
+                className="aspect-[4/3] w-full object-cover"
               />
             ) : (
-              <div className="flex aspect-square w-full items-center justify-center bg-neutral-800 text-sm text-neutral-500">
+              <div className="flex aspect-[4/3] w-full items-center justify-center bg-neutral-800 text-sm text-neutral-500">
                 Ingen bild ännu
               </div>
             )}
@@ -160,7 +160,7 @@ export default function HallOfFameGrid({
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4"
           onClick={closeEntry}
         >
-          <div
+          <div //80vh = Ändra pop-up fönstret höjd.
             className="flex h-[80vh] max-h-[900px] w-full max-w-4xl flex-col-reverse overflow-hidden rounded-2xl border border-neutral-800 bg-neutral-900 sm:flex-row-reverse"
             onClick={(e) => e.stopPropagation()}
           >

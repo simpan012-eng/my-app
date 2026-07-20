@@ -177,7 +177,7 @@ export default function Page() {
             {entries.map((entry) => (
               <div
                 key={entry.id}
-                className="aspect-square w-full animate-pulse rounded-xl bg-neutral-800"
+                className="aspect-[4/3] w-full animate-pulse rounded-xl bg-neutral-800"
               />
             ))}
           </div>

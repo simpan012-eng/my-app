@@ -18,10 +18,10 @@ export function HeroSection() {
             {/* Innehåll, måste ligga ovanpå bilden */}
             <div className="relative z-10 mx-auto flex max-w-2xl flex-col items-center gap-8 text-center">
                 <div className="space-y-3">
-                    <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">
+                    <h1 className="text-4xl font-bold text-white sm:text-5xl">
                         Torsdagskröken
                     </h1>
-                    <p className="font-heading max-w-md text-neutral-300">
+                    <p className="max-w-md text-neutral-300">
                         En liten öl är man väl värd?
                     </p>
                 </div>

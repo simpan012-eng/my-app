@@ -9,7 +9,7 @@ async function AdminContent() {
 
   const supabaseAdmin = createAdminClient();
   const { data: users } = await supabaseAdmin
-    .from("profiles")
+    .from("profiles") 
     .select("id, username, is_admin")
     .order("username");
 

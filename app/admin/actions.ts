@@ -6,6 +6,16 @@ import { requireAdmin } from "@/lib/supabase/require-admin";
 
 type CreateUserResult = { error: string } | { success: true };
 
+// Gör om användarnamnet till en e-postsäker sträng: tar bort åäö-prickar,
+// gör allt till gemener, och byter ut allt som inte är a-z/0-9 mot inget.
+function slugifyUsername(username: string) {
+  return username
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "") // tar bort diakritiska tecken (å->a, ä->a, ö->o)
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, "");
+}
+
 export async function createUserAction(
   formData: FormData
 ): Promise<CreateUserResult> {
@@ -13,20 +23,27 @@ export async function createUserAction(
   await requireAdmin();
 
   const username = String(formData.get("username") ?? "").trim();
-  const email = String(formData.get("email") ?? "").trim();
   const password = String(formData.get("password") ?? "");
 
-  if (!username || !email || !password) {
+  if (!username || !password) {
     return { error: "Alla fält krävs" };
   }
   if (password.length < 8) {
     return { error: "Lösenordet måste vara minst 8 tecken" };
   }
 
+  const slug = slugifyUsername(username);
+  if (!slug) {
+    return { error: "Användarnamnet måste innehålla minst en bokstav eller siffra" };
+  }
+
+  // Ingen riktig inkorg finns bakom denna adress — den används bara internt
+  // av Supabase Auth som kontoidentifierare. Användaren loggar alltid in
+  // med username, aldrig med denna adress.
+  const email = `${slug}@krokenkrew.local`;
+
   const supabaseAdmin = createAdminClient();
 
-  // Create the auth user. email_confirm: true skips the confirmation
-  // email flow since an admin is vouching for this account directly.
   const { data, error } = await supabaseAdmin.auth.admin.createUser({
     email,
     password,
@@ -34,6 +51,9 @@ export async function createUserAction(
   });
 
   if (error || !data.user) {
+    if (error?.message.toLowerCase().includes("already been registered")) {
+      return { error: "Ett konto med ett liknande användarnamn finns redan" };
+    }
     return { error: error?.message ?? "Kunde inte skapa användaren" };
   }
 
@@ -86,5 +106,31 @@ export async function deleteUserAction(
   }
 
   revalidatePath("/admin");
+  return { success: true };
+}
+
+type ResetPasswordResult = { error: string } | { success: true };
+
+export async function resetPasswordAction(
+  userId: string,
+  newPassword: string
+): Promise<ResetPasswordResult> {
+  // Throws/redirects if the caller isn't a logged-in admin.
+  await requireAdmin();
+
+  if (newPassword.length < 8) {
+    return { error: "Lösenordet måste vara minst 8 tecken" };
+  }
+
+  const supabaseAdmin = createAdminClient();
+
+  const { error } = await supabaseAdmin.auth.admin.updateUserById(userId, {
+    password: newPassword,
+  });
+
+  if (error) {
+    return { error: error.message };
+  }
+
   return { success: true };
 }

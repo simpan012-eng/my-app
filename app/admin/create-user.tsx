@@ -43,22 +43,6 @@ export default function CreateUserForm() {
 
       <div>
         <label
-          htmlFor="email"
-          className="block text-xs font-medium text-neutral-400 mb-1.5"
-        >
-          E-post
-        </label>
-        <input
-          id="email"
-          name="email"
-          type="email"
-          required
-          className="w-full rounded-lg border border-neutral-700 bg-neutral-800/50 px-3 py-2.5 text-white outline-none focus:border-[#0604bd] focus:ring-1 focus:ring-[#0604bd]"
-        />
-      </div>
-
-      <div>
-        <label
           htmlFor="password"
           className="block text-xs font-medium text-neutral-400 mb-1.5"
         >
