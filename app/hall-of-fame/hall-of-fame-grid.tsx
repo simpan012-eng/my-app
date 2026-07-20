@@ -161,11 +161,11 @@ export default function HallOfFameGrid({
           onClick={closeEntry}
         >
           <div
-            className="flex w-full max-w-4xl flex-col-reverse overflow-hidden rounded-2xl border border-neutral-800 bg-neutral-900 sm:h-[80vh] sm:max-h-[900px] sm:flex-row-reverse"
+            className="flex h-[80vh] max-h-[900px] w-full max-w-4xl flex-col-reverse overflow-hidden rounded-2xl border border-neutral-800 bg-neutral-900 sm:flex-row-reverse"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Innehåll */}
-            <div className="flex-1 overflow-y-auto p-6 text-left">
+            <div className="min-h-0 flex-1 overflow-y-auto p-6 text-left">
               <div className="mb-4 flex items-start justify-between gap-4">
                 <h3 className="font-heading text-lg tracking-wide text-white">
                   {activeEntry.caption}
